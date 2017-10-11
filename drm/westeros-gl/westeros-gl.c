@@ -16,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <string.h>
 #include <dlfcn.h>
 #include <stdbool.h>
 #include <unistd.h>
@@ -23,7 +24,7 @@
 #include <gbm.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-#include <GLES/gl.h>
+#include <GL/gl.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <errno.h>
