@@ -56,6 +56,8 @@ PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.22.5])
 PKG_CHECK_MODULES([GTHREAD],[gthread-2.0 >= 2.38.2])
 PKG_CHECK_MODULES([WAYLAND_CLIENT],[wayland-client >= 1.6.0])
 PKG_CHECK_MODULES([WAYLAND_SERVER],[wayland-server >= 1.6.0])
+PKG_CHECK_MODULES([GBM],[gbm >= 16.0])
+PKG_CHECK_MODULES([LIBDRM],[libdrm >= 2.0])
 
 WAYLANDLIB="-lwayland-client"
 AC_SUBST(WAYLANDLIB)
