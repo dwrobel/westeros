@@ -2,7 +2,7 @@
 # If not stated otherwise in this file or this component's Licenses.txt file the
 # following copyright and licenses apply:
 #
-# Copyright 2017 RDK Management
+# Copyright 2017-2018 RDK Management
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,11 @@
 # limitations under the License.
 #
 
+ACLOCAL_AMFLAGS = -I .m4
 AUTOMAKE_OPTIONS = subdir-objects
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = essos.pc
 
 lib_LTLIBRARIES = libessos.la
 
@@ -29,23 +33,23 @@ libessos_la_SOURCES = essos.cpp
 libessos_la_include_HEADERS = essos.h
 libessos_la_includedir = $(includedir)
 
-libessos_la_CXXFLAGS = $(AM_CXXFLAGS)
-libessos_la_LDFLAGS = $(AM_LDFLAGS) -lEGL
+libessos_la_CXXFLAGS =
+                     #  version-info current:revision:age
+libessos_la_LDFLAGS  = -version-info 1:0:0 $(AM_LDFLAGS) \
+              $(EGL_LIBS)   $(WESTEROS_LIBS)   $(WAYLAND_LIBS)   $(WAYLAND_EGL_LIBS)   $(XKBCOMMON_LIBS)
+AM_CPPFLAGS = $(EGL_CFLAGS) $(WESTEROS_CFLAGS) $(WAYLAND_CFLAGS) $(WAYLAND_EGL_CFLAGS) $(XKBCOMMON_CFLAGS)
 
-if HAVE_WAYLAND
-if HAVE_WAYLAND_EGL
-if HAVE_XKB
-libessos_la_CXXFLAGS += -DHAVE_WAYLAND $(WAYLAND_CFLAGS) $(XKBCOMMON_CFLAGS)
-libessos_la_LDFLAGS += $(WAYLAND_EGL_LIBS) $(WAYLAND_LIBS) $(XKBCOMMON_LIBS)
-endif
-endif
-endif
+essos_sample_SOURCES  = essos-sample.cpp
+essos_sample_CXXFLAGS = $(GLESv2_CFLAGS)
+essos_sample_LDFLAGS  = $(AM_FLAGS) $(GLESv2_LIBS) -lessos
 
-libessos_la_CXXFLAGS += -DHAVE_WESTEROS $(WESTEROS_CFLAGS)
-libessos_la_LDFLAGS += -lwesteros_gl
+EXTRA_DIST = README.md LICENSE
 
-essos_sample_SOURCES = essos-sample.cpp
-essos_sample_LDFLAGS = $(AM_FLAGS) -lessos -lGLESv2
+MAINTAINERCLEANFILES = essos.pc Makefile Makefile.in aclocal.m4 config.log \
+                       config.status configure essos.pc libtool
+
+maintainer-clean-local:
+	-rm -rf .automake .m4
 
 ## IPK Generation Support
 IPK_GEN_PATH = $(abs_top_builddir)/ipk

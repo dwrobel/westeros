@@ -26,27 +26,49 @@
 #include <assert.h>
 #include <errno.h>
 #include <unistd.h>
-#include <linux/input.h>
+
+#ifdef HAVE_LINUX_INPUT_H
+# include <linux/input.h>
+#endif
+
 #include <poll.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <dirent.h>
+#include <fcntl.h>
+
+#ifdef HAVE_SYS_INOTIFY_H
+# include <sys/inotify.h>
+#endif
+
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include <vector>
 
-#ifdef HAVE_WAYLAND
-#include <xkbcommon/xkbcommon.h>
-#include <sys/mman.h>
-#include "wayland-client.h"
-#include "wayland-egl.h"
+#ifdef HAVE_SYS_MMAN_H
+# include <sys/mman.h>
 #endif
 
-#ifdef HAVE_WESTEROS
-#include "westeros-gl.h"
-#include <dirent.h>
-#include <fcntl.h>
-#include <sys/inotify.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#ifdef HAVE_WAYLAND_CLIENT_H
+# include <wayland-client.h>
+#endif
+
+#ifdef HAVE_WAYLAND_EGL_H
+# include <wayland-egl.h>
+#endif
+
+#ifdef HAVE_XKBCOMMON_XKBCOMMON_H
+# include <xkbcommon/xkbcommon.h>
+#endif
+
+#if (defined(HAVE_WAYLAND_CLIENT_H) && defined(HAVE_XKBCOMMON_XKBCOMMON_H))
+# define HAVE_WAYLAND
+#endif
+
+#ifdef HAVE_WESTEROS_GL_H
+# include <westeros-gl.h>
+# define HAVE_WESTEROS
 #endif
 
 #define ESS_UNUSED(x) ((void)x)
@@ -708,8 +730,10 @@ void EssContextStop( EssCtx *ctx )
       {
          if  (!ctx->isWayland )
          {
+            #ifdef HAVE_WESTEROS
             essMonitorInputDevicesLifecycleBegin( ctx );
             essReleaseInputDevices( ctx );
+            #endif
          }
 
          essEGLTerm( ctx );
@@ -1049,8 +1073,10 @@ static void essInitInput( EssCtx *ctx )
       }
       else
       {
+         #ifdef HAVE_WESTEROS
          essGetInputDevices( ctx );
          essMonitorInputDevicesLifecycleBegin( ctx );
+         #endif
       }
    }
 }
