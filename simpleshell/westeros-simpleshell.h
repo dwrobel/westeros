@@ -21,6 +21,10 @@
 
 #include "wayland-server.h"
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef struct _WstRenderer WstRenderer;
 typedef struct _WstRenderSurface WstRenderSurface;
 
@@ -48,6 +52,10 @@ void WstSimpleShellNotifySurfaceCreated( wl_simple_shell *shell, struct wl_clien
                                          struct wl_resource *surface_resource, uint32_t surfaceId );
 
 void WstSimpleShellNotifySurfaceDestroyed( wl_simple_shell *shell, struct wl_client *client, uint32_t surfaceId );
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif
 
